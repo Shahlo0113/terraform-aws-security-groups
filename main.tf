@@ -32,5 +32,5 @@ resource "aws_security_group" "all_sg" {
 }
 
 output "security_group_id" {
-  value = { for k, v in aws_security_group.default : k => v.id }
+  value = { for k, v in aws_security_group.all_sg : k => v.id }
 }
