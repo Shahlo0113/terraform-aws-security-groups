@@ -1,4 +1,4 @@
-resource "aws_security_group" "all_sg" {
+resource "aws_security_group" "default"{
   for_each = var.security_groups
 
   name        = each.key
