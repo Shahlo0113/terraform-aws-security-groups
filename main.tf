@@ -3,7 +3,7 @@ resource "aws_security_group" "default"{
 
   name        = each.key
   description = each.value.description
-  vpc_id      = module.vpc.vpc_id
+  vpc_id      = var.vpc_id
 
   dynamic "egress" {
     for_each = each.value.egress_rules != null ? each.value.egress_rules : []
