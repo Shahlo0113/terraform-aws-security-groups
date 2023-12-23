@@ -1,9 +1,9 @@
-resource "aws_security_group" "all_sg"{
+resource "aws_security_group" "default"{
   for_each = var.security_groups
 
   name        = each.key
   description = each.value.description
-  vpc_id      = var.vpc_id
+  vpc_id      = module.vpc.vpc_id
 
   dynamic "egress" {
     for_each = each.value.egress_rules != null ? each.value.egress_rules : []
@@ -14,7 +14,8 @@ resource "aws_security_group" "all_sg"{
       from_port   = egress.value.from_port
       to_port     = egress.value.to_port
       protocol    = egress.value.protocol
-      cidr_blocks = egress.value.cidr_blocks
+      cidr_blocks = egress.value.cidr_blocks != null ? ingress.value.cidr_blocks : null
+       security_groups = egress.value.security_groups != null ? egress.value.security_groups : null
     }
   }
 
@@ -26,11 +27,13 @@ resource "aws_security_group" "all_sg"{
       from_port   = ingress.value.from_port
       to_port     = ingress.value.to_port
       protocol    = ingress.value.protocol
-      cidr_blocks = ingress.value.cidr_blocks
+      cidr_blocks = ingress.value.cidr_blocks != null ? egress.value.cidr_blocks : null
+      security_groups = egress.value.security_groups != null ? egress.value.security_groups : null
+    }
     }
   }
-}
+
 
 output "security_group_id" {
-  value = { for k, v in aws_security_group.all_sg : k => v.id }
+  value = { for k, v in aws_security_group.default : k => v.id }
 }
