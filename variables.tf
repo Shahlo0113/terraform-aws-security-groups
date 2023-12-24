@@ -8,7 +8,8 @@ variable "security_groups" {
       from_port   = number
       to_port     = number
       protocol    = string
-      cidr_blocks = list(string)
+      cidr_blocks = optional(list(string))
+      security_groups = optional(list(string))
     })))
     egress_rules = list(object({
       description = optional(string)
@@ -16,7 +17,8 @@ variable "security_groups" {
       from_port   = number
       to_port     = number
       protocol    = string
-      cidr_blocks = list(string)
+      cidr_blocks = optional(list(string))
+      security_groups = optional(list(string))
     }))
   }))
   default = {}      
